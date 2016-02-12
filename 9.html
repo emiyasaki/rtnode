@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <title>Index Page</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <h1>Index Page</h1>
+            <p id="sock"></p>
+        </div>
+        <div class="row">
+            <form>
+                <div class="form-group">
+                    <label for="messageText">Message</label>
+                    <input type="text" class="form-control" id="messageText" placeholder="Message">
+                </div>
+                <button id="btnSend" type="button" class="btn btn-default">Send</button>
+            </form>
+        </div>
+        <div class="row">
+            <div id="messages"></div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var socket = io.connect('/');
+    socket.on('connect', function() {
+        console.log('Connected');
+    });
+
+    socket.on('disconnect', function() {
+        console.log('Disconnected');
+    });
+
+    socket.on('hello', function(data) {
+        document.getElementById('sock').innerHTML = data;
+    });
+
+    socket.on('messages', function(data){
+        document.getElementById('messages').innerHTML += '<span class="text-success">' + data + '</span><br>';
+    });
+
+    document.getElementById("btnSend").addEventListener("click", function(event) {
+        event.preventDefault();
+        var el = document.getElementById('messageText');
+        var msg = el.value;
+        if (msg.trim()) {
+            socket.emit('message', msg);
+            document.getElementById('messages').innerHTML += '<span class="text-primary">' + msg + '</span><br>';
+            el.value = '';
+        }
+    });
+
+    </script>
+</body>
+
+</html>
