@@ -19,16 +19,16 @@ function handleHTTP(req, res) {
 
 function handleIO(socket) {
     function disconnect() {
-        clearInterval(intvl);
+        //clearInterval(intvl);
         console.log('Client disconnected');
     }
 
     console.log('Client connected');
     socket.on('disconnect', disconnect);
 
-    var intvl = setInterval(function() {
+    /*var intvl = setInterval(function() {
         socket.emit('hello', Math.random());
-    }, 1000);
+    }, 1000);*/
 
     socket.on('message', function(data){
     	socket.broadcast.emit('messages', data);
